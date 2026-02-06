@@ -15,7 +15,7 @@ pipeline {
     }
 
     triggers {
-        cron '50 20 * * 1,4' // Runs at 20:50 on Monday and Thursday
+        cron '50 22 * * 1,4' // Runs at 22:50 on Monday and Thursday
          }
 
     stages {
@@ -70,6 +70,16 @@ pipeline {
                       --format=sarifv2.1.0 \
                       --output="$SARIF_OUTPUT"
                 '''
+            }
+        }
+        stage('Security Scan') {
+            steps {
+                registerSecurityScan(
+                    // Security Scan to include
+                    artifacts: "$SARIF_OUTPUT",
+                    format: "sarif",
+                    archive: true
+                )
             }
         }
 
